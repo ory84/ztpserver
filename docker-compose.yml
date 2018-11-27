@@ -1,0 +1,27 @@
+version: "2"
+services:
+  lighttpd:
+    build: build/lighttpd
+    ports:
+      - "80:80/tcp"
+    network_mode: "host"
+    volumes:
+      - ./conf:/conf
+      - ./data:/data
+      - ./log:/log
+  rsyslogd:
+    build: build/rsyslogd
+    ports:
+      - "514:514/udp"
+    network_mode: "host"
+    volumes:
+      - ./conf:/conf
+      - ./log:/var/log
+  dhcpd:
+    build: build/dhcpd
+    command: ens224
+    ports:
+      - "67:67/udp"
+    network_mode: "host"
+    volumes:
+      - ./conf:/conf

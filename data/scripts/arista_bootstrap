@@ -1,0 +1,28 @@
+#!/bin/bash
+# Pedro Antunes
+# pedro.antunes@eplus.com
+
+
+target_version=4.20.5F
+url_swi=http://10.35.2.51/images/EOS-4.20.5F.swi
+url_config=http://10.35.2.51/configs/arista.config
+
+
+# ---------------------------------------------
+# do not edit below this line
+
+
+current_version=`FastCli -c "show version" | awk '/image version/ {print $4}'`
+
+if [[ $current_version != $target_version ]]; then
+    echo "Installing new image"
+    FastCli -c "install source $url_swi reload now"
+    exit 0
+else
+    echo "Installing config"
+    wget $url_config -O /mnt/flash/startup-config
+    #FastCli -c "configure replace $url_config"
+    #FastCli -c "copy running-config startup-config"
+    touch /mnt/flash/zerotouch-config
+    reboot
+fi
